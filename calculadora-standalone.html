@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Calificaciones - Universidad de Córdoba</title>
+    <style>
+/* ===================================
+   Calculadora de Calificaciones - Universidad de Córdoba
+   Sistema de estilos principal
+   =================================== */
+
+:root {
+    --color-primary: #2d5a4b;
+    --color-primary-light: #3d6b5c;
+    --color-primary-dark: #1d4a3b;
+    --color-secondary: #ffffff;
+    --color-success: #28a745;
+    --color-danger: #dc3545;
+    --color-warning: #ffc107;
+    --color-gray: #6c757d;
+    --color-bg: #f5f5f5;
+    --color-card: #ffffff;
+    --color-text: #333333;
+    --color-text-light: #666666;
+    --color-border: #dddddd;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --box-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-secondary);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: var(--box-shadow);
+}
+
+.header h1 { font-size: 2rem; font-weight: 600; margin-bottom: 5px; }
+.header h2 { font-size: 1.2rem; font-weight: 400; opacity: 0.9; }
+
+/* Navegación */
+.nav-menu {
+    display: flex;
+    background: var(--color-card);
+    border-radius: var(--border-radius);
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: var(--box-shadow);
+    gap: 10px;
+}
+
+.nav-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover { background: var(--color-bg); }
+.nav-btn.active { background: var(--color-primary); color: var(--color-secondary); }
+
+/* Secciones */
+.section { display: none; }
+.section.active { display: block; }
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h3 { font-size: 1.5rem; color: var(--color-primary); }
+
+/* Botones */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary { background: var(--color-primary); color: var(--color-secondary); }
+.btn-primary:hover { background: var(--color-primary-dark); }
+.btn-secondary { background: var(--color-gray); color: var(--color-secondary); }
+.btn-secondary:hover { background: #5a6268; }
+.btn-danger { background: var(--color-danger); color: var(--color-secondary); }
+.btn-danger:hover { background: #c82333; }
+
+.btn-group { display: flex; gap: 10px; }
+
+/* Toolbar (Búsqueda y Filtros) */
+.toolbar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.search-box { flex: 1; min-width: 250px; }
+
+.search-box input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid var(--color-border);
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--color-card);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(45, 90, 75, 0.1);
+}
+
+.filtros select {
+    padding: 12px 20px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background: var(--color-card);
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.filtros select:focus { outline: none; border-color: var(--color-primary); }
+
+/* Estadísticas */
+.stats-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    background: var(--color-card);
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    border-top: 3px solid var(--color-primary);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover { transform: translateY(-2px); box-shadow: var(--box-shadow-hover); }
+.stat-item.success { border-top-color: var(--color-success); }
+.stat-item.success .stat-value { color: var(--color-success); }
+.stat-item.danger { border-top-color: var(--color-danger); }
+.stat-item.danger .stat-value { color: var(--color-danger); }
+.stat-item.warning { border-top-color: var(--color-warning); }
+.stat-item.warning .stat-value { color: #d4a017; }
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value { font-size: 1.8rem; font-weight: bold; color: var(--color-primary); }
+
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--color-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.empty-state-icon { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+.empty-state h4 { font-size: 1.3rem; color: var(--color-text); margin-bottom: 10px; }
+.empty-state p { color: var(--color-text-light); margin-bottom: 20px; }
+
+/* Indicador de progreso */
+.progress-indicator { margin-bottom: 15px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--color-text-light); margin-bottom: 5px; }
+.progress-bar { height: 8px; background: var(--color-bg); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.progress-fill.success { background: var(--color-success); }
+.progress-fill.warning { background: var(--color-warning); }
+.progress-fill.danger { background: var(--color-danger); }
+.progress-fill.gray { background: var(--color-gray); }
+
+/* Badges de estado */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: 8px;
+}
+
+.status-badge.aprobado { background: rgba(40, 167, 69, 0.1); color: var(--color-success); }
+.status-badge.reprobado { background: rgba(220, 53, 69, 0.1); color: var(--color-danger); }
+.status-badge.riesgo { background: rgba(255, 193, 7, 0.2); color: #d4a017; }
+.status-badge.pendiente { background: rgba(108, 117, 125, 0.1); color: var(--color-gray); }
+
+/* Grid de Estudiantes */
+.estudiantes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.estudiante-card {
+    background: var(--color-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    border-left: 4px solid var(--color-gray);
+    transition: all 0.3s ease;
+}
+
+.estudiante-card:hover { box-shadow: var(--box-shadow-hover); transform: translateY(-2px); }
+.estudiante-card.aprobado { border-left-color: var(--color-success); }
+.estudiante-card.reprobado { border-left-color: var(--color-danger); }
+.estudiante-card.riesgo { border-left-color: var(--color-warning); }
+
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+.card-title { font-size: 1.2rem; font-weight: 600; color: var(--color-text); }
+.card-subtitle { font-size: 0.9rem; color: var(--color-text-light); }
+.card-actions { display: flex; gap: 8px; }
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.btn-edit { background: #e3f2fd; color: #1976d2; }
+.btn-edit:hover { background: #1976d2; color: white; }
+.btn-delete { background: #ffebee; color: #d32f2f; }
+.btn-delete:hover { background: #d32f2f; color: white; }
+
+/* Calificaciones en Cards */
+.calificaciones-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.calificacion-item { text-align: center; padding: 10px; background: var(--color-bg); border-radius: var(--border-radius); }
+.calificacion-label { font-size: 0.75rem; color: var(--color-text-light); text-transform: uppercase; margin-bottom: 3px; }
+.calificacion-valor { font-size: 1.1rem; font-weight: bold; color: var(--color-text); }
+.calificacion-valor.vacio { color: var(--color-gray); font-style: italic; }
+
+.definitiva-box { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--color-bg); border-radius: var(--border-radius); margin-bottom: 10px; }
+.definitiva-label { font-weight: 600; }
+.definitiva-valor { font-size: 1.3rem; font-weight: bold; }
+.definitiva-valor.aprobado { color: var(--color-success); }
+.definitiva-valor.reprobado { color: var(--color-danger); }
+
+.predicciones { font-size: 0.85rem; color: var(--color-text-light); }
+.prediccion-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--color-border); }
+.prediccion-item:last-child { border-bottom: none; }
+.prediccion-valor { font-weight: 600; }
+.prediccion-valor.inalcanzable { color: var(--color-danger); font-style: italic; }
+
+/* Configuración */
+.config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+.config-card { background: var(--color-card); border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 25px; }
+.config-card h4 { margin-bottom: 20px; color: var(--color-primary); font-size: 1.2rem; }
+
+/* Formularios */
+.form-group { margin-bottom: 15px; position: relative; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--color-text); }
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus { outline: none; border-color: var(--color-primary); }
+.form-group input.valid { border-color: var(--color-success); }
+.form-group input.invalid { border-color: var(--color-danger); }
+.form-group small { display: block; margin-top: 5px; color: var(--color-text-light); font-size: 0.85rem; }
+
+.form-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+
+.total-porcentajes { font-weight: bold; font-size: 1.1rem; }
+.total-porcentajes.valid { color: var(--color-success); }
+.total-porcentajes.invalid { color: var(--color-danger); }
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.active { display: flex; }
+
+.modal-content {
+    background: var(--color-card);
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-bottom: 1px solid var(--color-border); }
+.modal-header h3 { color: var(--color-primary); }
+
+.btn-close {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: var(--color-bg);
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+    transition: all 0.2s ease;
+}
+
+.btn-close:hover { background: var(--color-danger); color: white; }
+
+.modal form { padding: 25px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+/* Toast */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    color: white;
+    font-weight: 500;
+    box-shadow: var(--box-shadow-hover);
+    animation: toastSlideIn 0.3s ease;
+    min-width: 250px;
+}
+
+@keyframes toastSlideIn {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.toast.success { background: var(--color-success); }
+.toast.error { background: var(--color-danger); }
+.toast.warning { background: var(--color-warning); color: var(--color-text); }
+.toast.info { background: var(--color-primary); }
+
+/* Ayuda */
+.help-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.help-card { background: var(--color-card); border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 20px; }
+.help-card h4 { color: var(--color-primary); margin-bottom: 15px; font-size: 1.1rem; }
+.help-card ul { list-style: none; padding-left: 0; }
+.help-card li { padding: 8px 0; border-bottom: 1px solid var(--color-border); }
+.help-card li:last-child { border-bottom: none; }
+
+.color-guide { display: flex; flex-direction: column; gap: 10px; }
+.color-item { display: flex; align-items: center; gap: 10px; }
+.color-box { width: 20px; height: 20px; border-radius: 4px; }
+.color-box.success { background: var(--color-success); }
+.color-box.danger { background: var(--color-danger); }
+.color-box.warning { background: var(--color-warning); }
+.color-box.gray { background: var(--color-gray); }
+
+pre { background: var(--color-bg); padding: 15px; border-radius: var(--border-radius); overflow-x: auto; font-size: 0.9rem; }
+
+/* Responsive */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .container { padding: 10px; }
+    .header { padding: 20px; }
+    .header h1 { font-size: 1.5rem; }
+    .header h2 { font-size: 1rem; }
+    .nav-menu { flex-direction: column; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .search-box { min-width: auto; }
+    .filtros select { width: 100%; }
+    .section-header { flex-direction: column; gap: 10px; align-items: stretch; }
+    .stats-bar { justify-content: center; }
+    .stat-item { min-width: 100px; padding: 12px 15px; }
+    .stat-value { font-size: 1.5rem; }
+    .estudiantes-grid { grid-template-columns: 1fr; }
+    .config-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .calificaciones-grid { grid-template-columns: repeat(3, 1fr); }
+    .help-content { grid-template-columns: 1fr; }
+    .btn { padding: 10px 16px; font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+    .calificaciones-grid { grid-template-columns: 1fr; }
+    .modal-content { margin: 10px; }
+    .toast-container { left: 10px; right: 10px; }
+    .toast { min-width: auto; }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Universidad de Córdoba</h1>
+            <h2>Calculadora de Calificaciones</h2>
+        </header>
+
+        <nav class="nav-menu">
+            <button class="nav-btn active" data-section="estudiantes">Estudiantes</button>
+            <button class="nav-btn" data-section="configuracion">Configuración</button>
+            <button class="nav-btn" data-section="ayuda">Ayuda</button>
+        </nav>
+
+        <main class="main-content">
+            <!-- Sección Estudiantes -->
+            <section id="estudiantes" class="section active">
+                <div class="section-header">
+                    <h3>Gestión de Estudiantes</h3>
+                    <button class="btn btn-primary" id="btn-agregar">+ Agregar Estudiante</button>
+                </div>
+                
+                <div class="toolbar">
+                    <div class="search-box">
+                        <input type="text" id="buscar-estudiante" placeholder="🔍 Buscar por nombre o código...">
+                    </div>
+                    <div class="filtros">
+                        <select id="filtro-estado">
+                            <option value="todos">Todos los estudiantes</option>
+                            <option value="aprobados">Aprobados</option>
+                            <option value="reprobados">Reprobados</option>
+                            <option value="riesgo">En riesgo</option>
+                            <option value="incompletos">Notas incompletas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Estudiantes</span>
+                        <span class="stat-value" id="total-estudiantes">0</span>
+                    </div>
+                    <div class="stat-item success">
+                        <span class="stat-label">Aprobados</span>
+                        <span class="stat-value" id="total-aprobados">0</span>
+                    </div>
+                    <div class="stat-item danger">
+                        <span class="stat-label">Reprobados</span>
+                        <span class="stat-value" id="total-reprobados">0</span>
+                    </div>
+                    <div class="stat-item warning">
+                        <span class="stat-label">En Riesgo</span>
+                        <span class="stat-value" id="total-riesgo">0</span>
+                    </div>
+                </div>
+
+                <div class="estudiantes-grid" id="estudiantes-grid"></div>
+            </section>
+
+            <!-- Sección Configuración -->
+            <section id="configuracion" class="section">
+                <div class="section-header">
+                    <h3>Configuración del Sistema</h3>
+                </div>
+
+                <div class="config-grid">
+                    <div class="config-card">
+                        <h4>Porcentajes de Cortes</h4>
+                        <form id="form-porcentajes">
+                            <div class="form-group">
+                                <label for="porc-corte1">Corte 1 (%)</label>
+                                <input type="number" id="porc-corte1" min="0" max="100" value="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="porc-corte2">Corte 2 (%)</label>
+                                <input type="number" id="porc-corte2" min="0" max="100" value="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="porc-corte3">Corte 3 (%)</label>
+                                <input type="number" id="porc-corte3" min="0" max="100" value="40" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Total:</label>
+                                <span id="total-porcentajes" class="total-porcentajes valid">100%</span>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar Configuración</button>
+                        </form>
+                    </div>
+
+                    <div class="config-card">
+                        <h4>Importar/Exportar Datos</h4>
+                        <div class="form-group">
+                            <label for="csv-input">Cargar desde CSV</label>
+                            <input type="file" id="csv-input" accept=".csv">
+                            <small>Formato: nombre,código,corte1,corte2,corte3</small>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" id="btn-exportar">Exportar CSV</button>
+                            <button class="btn btn-danger" id="btn-limpiar">Limpiar Todo</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Ayuda -->
+            <section id="ayuda" class="section">
+                <div class="section-header">
+                    <h3>Ayuda e Instrucciones</h3>
+                </div>
+
+                <div class="help-content">
+                    <div class="help-card">
+                        <h4>Cómo Usar el Sistema</h4>
+                        <ul>
+                            <li><strong>Agregar Estudiante:</strong> Click en "Agregar Estudiante" y complete el formulario</li>
+                            <li><strong>Editar:</strong> Click en el ícono de editar en la tarjeta del estudiante</li>
+                            <li><strong>Eliminar:</strong> Click en el ícono de eliminar (requiere confirmación)</li>
+                            <li><strong>Calificaciones:</strong> Ingrese notas entre 0 y 5.0</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-card">
+                        <h4>Interpretación de Colores</h4>
+                        <div class="color-guide">
+                            <div class="color-item">
+                                <span class="color-box success"></span>
+                                <span>Definitiva ≥ 2.96 (Aprobado)</span>
+                            </div>
+                            <div class="color-item">
+                                <span class="color-box danger"></span>
+                                <span>Definitiva < 2.96 (Reprobado)</span>
+                            </div>
+                            <div class="color-item">
+                                <span class="color-box warning"></span>
+                                <span>En riesgo (necesita > 5.0 para aprobar)</span>
+                            </div>
+                            <div class="color-item">
+                                <span class="color-box gray"></span>
+                                <span>Sin calificaciones o meta inalcanzable</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-card">
+                        <h4>Formato CSV</h4>
+                        <pre>nombre,codigo,corte1,corte2,corte3
+Juan Pérez,2023001,3.5,4.0,3.8
+María García,2023002,2.5,3.0,4.5</pre>
+                    </div>
+
+                    <div class="help-card">
+                        <h4>Atajos de Teclado</h4>
+                        <ul>
+                            <li><strong>Ctrl + N:</strong> Nuevo estudiante</li>
+                            <li><strong>Ctrl + S:</strong> Guardar (en formularios)</li>
+                            <li><strong>ESC:</strong> Cerrar modal</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para Estudiante -->
+    <div class="modal" id="modal-estudiante">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-titulo">Agregar Estudiante</h3>
+                <button class="btn-close" id="btn-close">&times;</button>
+            </div>
+            <form id="form-estudiante">
+                <input type="hidden" id="estudiante-id">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo *</label>
+                    <input type="text" id="nombre" required minlength="2" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="codigo">Código Estudiantil *</label>
+                    <input type="text" id="codigo" required minlength="3" maxlength="20">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="corte1">Corte 1</label>
+                        <input type="number" id="corte1" min="0" max="5" step="0.01" placeholder="0-5.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="corte2">Corte 2</label>
+                        <input type="number" id="corte2" min="0" max="5" step="0.01" placeholder="0-5.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="corte3">Corte 3</label>
+                        <input type="number" id="corte3" min="0" max="5" step="0.01" placeholder="0-5.0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+// ==========================================
+// Calculadora de Calificaciones - Standalone
+// Universidad de Córdoba v1.0
+// ==========================================
+
+class CalculadoraCalificaciones {
+    constructor() {
+        this.estudiantes = [];
+        this.porcentajes = { corte1: 30, corte2: 30, corte3: 40 };
+        this.filtroActual = 'todos';
+        this.busquedaActual = '';
+        this.init();
+    }
+
+    init() {
+        this.cargarDatos();
+        this.configurarEventListeners();
+        this.renderizarEstudiantes();
+        this.actualizarEstadisticas();
+        this.actualizarPorcentajesUI();
+    }
+
+    cargarDatos() {
+        try {
+            const dataEstudiantes = localStorage.getItem('estudiantes');
+            const dataPorcentajes = localStorage.getItem('porcentajes');
+            if (dataEstudiantes) this.estudiantes = JSON.parse(dataEstudiantes);
+            if (dataPorcentajes) this.porcentajes = JSON.parse(dataPorcentajes);
+        } catch (error) {
+            console.error('Error al cargar datos:', error);
+        }
+    }
+
+    guardarDatos() {
+        try {
+            localStorage.setItem('estudiantes', JSON.stringify(this.estudiantes));
+            localStorage.setItem('porcentajes', JSON.stringify(this.porcentajes));
+        } catch (error) {
+            if (error.name === 'QuotaExceededError') {
+                this.mostrarToast('Almacenamiento lleno. Exporte y limpie datos.', 'error');
+            }
+        }
+    }
+
+    configurarEventListeners() {
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.cambiarSeccion(e.target.dataset.section));
+        });
+
+        document.getElementById('buscar-estudiante').addEventListener('input', (e) => {
+            this.busquedaActual = e.target.value.toLowerCase();
+            this.renderizarEstudiantes();
+        });
+        
+        document.getElementById('filtro-estado').addEventListener('change', (e) => {
+            this.filtroActual = e.target.value;
+            this.renderizarEstudiantes();
+        });
+
+        document.getElementById('estudiantes-grid').addEventListener('click', (e) => {
+            const card = e.target.closest('.estudiante-card');
+            if (!card) return;
+            const id = card.dataset.id;
+            if (e.target.closest('.btn-edit')) this.editarEstudiante(id);
+            else if (e.target.closest('.btn-delete')) this.eliminarEstudiante(id);
+        });
+
+        document.getElementById('btn-agregar').addEventListener('click', () => this.abrirModal());
+        document.getElementById('btn-close').addEventListener('click', () => this.cerrarModal());
+        document.getElementById('btn-cancelar').addEventListener('click', () => this.cerrarModal());
+        document.getElementById('form-estudiante').addEventListener('submit', (e) => this.guardarEstudiante(e));
+
+        document.getElementById('form-porcentajes').addEventListener('submit', (e) => this.guardarPorcentajes(e));
+        document.querySelectorAll('#form-porcentajes input').forEach(input => {
+            input.addEventListener('input', () => this.validarPorcentajes());
+        });
+
+        // Validación en tiempo real
+        document.getElementById('nombre').addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            e.target.classList.toggle('valid', val.length >= 2);
+            e.target.classList.toggle('invalid', val.length > 0 && val.length < 2);
+        });
+
+        document.getElementById('codigo').addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            const id = document.getElementById('estudiante-id').value;
+            const existe = val.length >= 3 && this.estudiantes.some(est => 
+                est.codigo.toLowerCase() === val.toLowerCase() && est.id !== id
+            );
+            e.target.classList.toggle('valid', val.length >= 3 && !existe);
+            e.target.classList.toggle('invalid', val.length > 0 && (val.length < 3 || existe));
+        });
+
+        ['corte1', 'corte2', 'corte3'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                const valid = !isNaN(val) && val >= 0 && val <= 5;
+                e.target.classList.toggle('valid', valid && e.target.value !== '');
+                e.target.classList.toggle('invalid', e.target.value !== '' && !valid);
+            });
+        });
+
+        document.getElementById('csv-input').addEventListener('change', (e) => this.importarCSV(e));
+        document.getElementById('btn-exportar').addEventListener('click', () => this.exportarCSV());
+        document.getElementById('btn-limpiar').addEventListener('click', () => this.limpiarTodo());
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.cerrarModal();
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                this.abrirModal();
+            }
+        });
+
+        document.getElementById('modal-estudiante').addEventListener('click', (e) => {
+            if (e.target.id === 'modal-estudiante') this.cerrarModal();
+        });
+    }
+
+    cambiarSeccion(seccion) {
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.querySelector(`[data-section="${seccion}"]`).classList.add('active');
+        document.getElementById(seccion).classList.add('active');
+    }
+
+    filtrarEstudiantes() {
+        return this.estudiantes.filter(est => {
+            if (this.busquedaActual) {
+                const match = est.nombre.toLowerCase().includes(this.busquedaActual) ||
+                             est.codigo.toLowerCase().includes(this.busquedaActual);
+                if (!match) return false;
+            }
+
+            if (this.filtroActual !== 'todos') {
+                const def = this.calcularDefinitiva(est);
+                const pred = this.calcularNotaNecesaria(est, 2.96);
+                
+                switch (this.filtroActual) {
+                    case 'aprobados': return def.definitiva !== null && def.definitiva >= 2.96;
+                    case 'reprobados': return def.definitiva !== null && def.definitiva < 2.96;
+                    case 'riesgo': return pred && pred.inalcanzable;
+                    case 'incompletos': return est.corte1 === null || est.corte2 === null || est.corte3 === null;
+                }
+            }
+            return true;
+        });
+    }
+
+    renderizarEstudiantes() {
+        const grid = document.getElementById('estudiantes-grid');
+        const filtrados = this.filtrarEstudiantes();
+        
+        if (this.estudiantes.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">👨‍🎓</div>
+                    <h4>No hay estudiantes registrados</h4>
+                    <p>Comience agregando su primer estudiante</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('btn-agregar').click()">+ Agregar Estudiante</button>
+                </div>`;
+            return;
+        }
+
+        if (filtrados.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔍</div>
+                    <h4>No se encontraron resultados</h4>
+                    <button class="btn btn-secondary" onclick="document.getElementById('buscar-estudiante').value='';document.getElementById('filtro-estado').value='todos';document.getElementById('buscar-estudiante').dispatchEvent(new Event('input'));document.getElementById('filtro-estado').dispatchEvent(new Event('change'));">Limpiar filtros</button>
+                </div>`;
+            return;
+        }
+
+        grid.innerHTML = filtrados.map(est => this.crearCardEstudiante(est)).join('');
+    }
+
+    crearCardEstudiante(est) {
+        const def = this.calcularDefinitiva(est);
+        const pred296 = this.calcularNotaNecesaria(est, 2.96);
+        const pred50 = this.calcularNotaNecesaria(est, 5.0);
+
+        let clase = '', badge = '', pClass = 'gray', pPct = 0;
+        const completados = [est.corte1, est.corte2, est.corte3].filter(n => n !== null).length;
+        pPct = (completados / 3) * 100;
+
+        if (def.definitiva !== null) {
+            if (def.definitiva >= 2.96) {
+                clase = 'aprobado'; badge = '<span class="status-badge aprobado">Aprobado</span>'; pClass = 'success'; pPct = 100;
+            } else {
+                clase = 'reprobado'; badge = '<span class="status-badge reprobado">Reprobado</span>'; pClass = 'danger'; pPct = 100;
+            }
+        } else if (pred296 && pred296.inalcanzable) {
+            clase = 'riesgo'; badge = '<span class="status-badge riesgo">En Riesgo</span>'; pClass = 'warning';
+        } else if (completados > 0) {
+            badge = '<span class="status-badge pendiente">En Curso</span>';
+            pClass = completados === 1 ? 'gray' : (completados === 2 ? 'warning' : 'success');
+        } else {
+            badge = '<span class="status-badge pendiente">Sin Notas</span>';
+        }
+
+        const fmt = n => n !== null ? n.toFixed(2) : '<span class="vacio">-</span>';
+        const p296 = pred296 ? (pred296.inalcanzable ? 'Inalcanzable ❌' : pred296.notaNecesaria.toFixed(2)) : '-';
+        const p50 = pred50 ? (pred50.inalcanzable ? 'Inalcanzable ❌' : pred50.notaNecesaria.toFixed(2)) : '-';
+
+        return `
+            <div class="estudiante-card ${clase}" data-id="${est.id}">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">${this.escapeHtml(est.nombre)} ${badge}</div>
+                        <div class="card-subtitle">Código: ${this.escapeHtml(est.codigo)}</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
+                        <button class="btn-icon btn-delete" title="Eliminar">🗑️</button>
+                    </div>
+                </div>
+                <div class="progress-indicator">
+                    <div class="progress-label"><span>Progreso: ${completados}/3 cortes</span><span>${Math.round(pPct)}%</span></div>
+                    <div class="progress-bar"><div class="progress-fill ${pClass}" style="width: ${pPct}%"></div></div>
+                </div>
+                <div class="calificaciones-grid">
+                    <div class="calificacion-item"><div class="calificacion-label">Corte 1 (${this.porcentajes.corte1}%)</div><div class="calificacion-valor">${fmt(est.corte1)}</div></div>
+                    <div class="calificacion-item"><div class="calificacion-label">Corte 2 (${this.porcentajes.corte2}%)</div><div class="calificacion-valor">${fmt(est.corte2)}</div></div>
+                    <div class="calificacion-item"><div class="calificacion-label">Corte 3 (${this.porcentajes.corte3}%)</div><div class="calificacion-valor">${fmt(est.corte3)}</div></div>
+                </div>
+                <div class="definitiva-box">
+                    <span class="definitiva-label">${def.esDefinitiva ? 'Definitiva' : 'Acumulado'}</span>
+                    <span class="definitiva-valor ${clase}">${def.definitiva !== null ? def.definitiva.toFixed(2) : '-'}</span>
+                </div>
+                <div class="predicciones">
+                    <div class="prediccion-item"><span>📋 Para pasar (2.96):</span><span class="prediccion-valor">${p296}</span></div>
+                    <div class="prediccion-item"><span>⭐ Para excelente (5.0):</span><span class="prediccion-valor">${p50}</span></div>
+                </div>
+            </div>`;
+    }
+
+    abrirModal(est = null) {
+        const modal = document.getElementById('modal-estudiante');
+        document.getElementById('form-estudiante').reset();
+        document.getElementById('estudiante-id').value = '';
+        document.querySelectorAll('#form-estudiante input').forEach(i => i.classList.remove('valid', 'invalid'));
+
+        if (est) {
+            document.getElementById('modal-titulo').textContent = 'Editar Estudiante';
+            document.getElementById('estudiante-id').value = est.id;
+            document.getElementById('nombre').value = est.nombre;
+            document.getElementById('codigo').value = est.codigo;
+            document.getElementById('corte1').value = est.corte1 || '';
+            document.getElementById('corte2').value = est.corte2 || '';
+            document.getElementById('corte3').value = est.corte3 || '';
+        } else {
+            document.getElementById('modal-titulo').textContent = 'Agregar Estudiante';
+        }
+        modal.classList.add('active');
+        document.getElementById('nombre').focus();
+    }
+
+    cerrarModal() {
+        document.getElementById('modal-estudiante').classList.remove('active');
+    }
+
+    guardarEstudiante(e) {
+        e.preventDefault();
+        const id = document.getElementById('estudiante-id').value;
+        const nombre = document.getElementById('nombre').value.trim();
+        const codigo = document.getElementById('codigo').value.trim();
+        const corte1 = this.validarNota(document.getElementById('corte1').value);
+        const corte2 = this.validarNota(document.getElementById('corte2').value);
+        const corte3 = this.validarNota(document.getElementById('corte3').value);
+
+        if (!this.validarDatosEstudiante(nombre, codigo, id)) return;
+
+        const est = { id: id || Date.now().toString(), nombre, codigo, corte1, corte2, corte3 };
+
+        if (id) {
+            const idx = this.estudiantes.findIndex(e => e.id === id);
+            if (idx !== -1) this.estudiantes[idx] = est;
+            this.mostrarToast('Estudiante actualizado', 'success');
+        } else {
+            this.estudiantes.push(est);
+            this.mostrarToast('Estudiante agregado', 'success');
+        }
+
+        this.guardarDatos();
+        this.renderizarEstudiantes();
+        this.actualizarEstadisticas();
+        this.cerrarModal();
+    }
+
+    validarDatosEstudiante(nombre, codigo, idActual) {
+        if (nombre.length < 2) { this.mostrarToast('Nombre mínimo 2 caracteres', 'error'); return false; }
+        if (codigo.length < 3) { this.mostrarToast('Código mínimo 3 caracteres', 'error'); return false; }
+        const existe = this.estudiantes.some(e => e.codigo.toLowerCase() === codigo.toLowerCase() && e.id !== idActual);
+        if (existe) { this.mostrarToast('Código ya existe', 'error'); return false; }
+        return true;
+    }
+
+    validarNota(valor) {
+        if (valor === '' || valor === null) return null;
+        let nota = parseFloat(valor);
+        if (isNaN(nota)) return null;
+        return Math.round(Math.max(0, Math.min(5, nota)) * 100) / 100;
+    }
+
+    editarEstudiante(id) {
+        const est = this.estudiantes.find(e => e.id === id);
+        if (est) this.abrirModal(est);
+    }
+
+    eliminarEstudiante(id) {
+        const est = this.estudiantes.find(e => e.id === id);
+        if (!est) return;
+        if (confirm(`¿Eliminar a ${est.nombre}?`)) {
+            this.estudiantes = this.estudiantes.filter(e => e.id !== id);
+            this.guardarDatos();
+            this.renderizarEstudiantes();
+            this.actualizarEstadisticas();
+            this.mostrarToast('Estudiante eliminado', 'info');
+        }
+    }
+
+    calcularDefinitiva(est) {
+        const notas = [], pesos = [];
+        if (est.corte1 !== null) { notas.push(est.corte1); pesos.push(this.porcentajes.corte1 / 100); }
+        if (est.corte2 !== null) { notas.push(est.corte2); pesos.push(this.porcentajes.corte2 / 100); }
+        if (est.corte3 !== null) { notas.push(est.corte3); pesos.push(this.porcentajes.corte3 / 100); }
+        
+        if (notas.length === 0) return { definitiva: null, esDefinitiva: false };
+        
+        let acumulado = 0, pesoTotal = 0;
+        for (let i = 0; i < notas.length; i++) { acumulado += notas[i] * pesos[i]; pesoTotal += pesos[i]; }
+        
+        return {
+            definitiva: Math.round(acumulado * 100) / 100,
+            esDefinitiva: est.corte1 !== null && est.corte2 !== null && est.corte3 !== null
+        };
+    }
+
+    calcularNotaNecesaria(est, objetivo) {
+        const cortes = [
+            { nota: est.corte1, peso: this.porcentajes.corte1 },
+            { nota: est.corte2, peso: this.porcentajes.corte2 },
+            { nota: est.corte3, peso: this.porcentajes.corte3 }
+        ];
+        
+        let acumulado = 0, pesoAcum = 0, pendientes = 0;
+        for (const c of cortes) {
+            if (c.nota !== null) { acumulado += c.nota * (c.peso / 100); pesoAcum += c.peso; }
+            else pendientes++;
+        }
+        
+        if (pendientes === 0) return null;
+        
+        const pesoRestante = 100 - pesoAcum;
+        if (pesoRestante === 0) return null;
+        
+        const necesaria = (objetivo - acumulado) * 100 / pesoRestante;
+        return { notaNecesaria: Math.round(necesaria * 100) / 100, inalcanzable: necesaria > 5 || necesaria < 0 };
+    }
+
+    actualizarEstadisticas() {
+        let aprobados = 0, reprobados = 0, riesgo = 0;
+        this.estudiantes.forEach(est => {
+            const def = this.calcularDefinitiva(est);
+            const pred = this.calcularNotaNecesaria(est, 2.96);
+            if (def.definitiva !== null) {
+                if (def.definitiva >= 2.96) aprobados++;
+                else reprobados++;
+            } else if (pred && pred.inalcanzable) riesgo++;
+        });
+        document.getElementById('total-estudiantes').textContent = this.estudiantes.length;
+        document.getElementById('total-aprobados').textContent = aprobados;
+        document.getElementById('total-reprobados').textContent = reprobados;
+        document.getElementById('total-riesgo').textContent = riesgo;
+    }
+
+    actualizarPorcentajesUI() {
+        document.getElementById('porc-corte1').value = this.porcentajes.corte1;
+        document.getElementById('porc-corte2').value = this.porcentajes.corte2;
+        document.getElementById('porc-corte3').value = this.porcentajes.corte3;
+        this.validarPorcentajes();
+    }
+
+    validarPorcentajes() {
+        const p1 = parseInt(document.getElementById('porc-corte1').value) || 0;
+        const p2 = parseInt(document.getElementById('porc-corte2').value) || 0;
+        const p3 = parseInt(document.getElementById('porc-corte3').value) || 0;
+        const total = p1 + p2 + p3;
+        const span = document.getElementById('total-porcentajes');
+        span.textContent = total + '%';
+        span.className = 'total-porcentajes ' + (total === 100 ? 'valid' : 'invalid');
+        return total === 100;
+    }
+
+    guardarPorcentajes(e) {
+        e.preventDefault();
+        if (!this.validarPorcentajes()) { this.mostrarToast('Los porcentajes deben sumar 100%', 'error'); return; }
+        this.porcentajes = {
+            corte1: parseInt(document.getElementById('porc-corte1').value),
+            corte2: parseInt(document.getElementById('porc-corte2').value),
+            corte3: parseInt(document.getElementById('porc-corte3').value)
+        };
+        this.guardarDatos();
+        this.renderizarEstudiantes();
+        this.mostrarToast('Configuración guardada', 'success');
+    }
+
+    importarCSV(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const lineas = event.target.result.split('\n').filter(l => l.trim());
+                let importados = 0, inicio = lineas[0].toLowerCase().includes('nombre') ? 1 : 0;
+                for (let i = inicio; i < lineas.length; i++) {
+                    const campos = lineas[i].split(',').map(c => c.trim());
+                    if (campos.length < 2) continue;
+                    const [nombre, codigo, ...notas] = campos;
+                    if (this.estudiantes.some(e => e.codigo.toLowerCase() === codigo.toLowerCase())) continue;
+                    this.estudiantes.push({
+                        id: Date.now().toString() + i, nombre, codigo,
+                        corte1: notas[0] ? this.validarNota(notas[0]) : null,
+                        corte2: notas[1] ? this.validarNota(notas[1]) : null,
+                        corte3: notas[2] ? this.validarNota(notas[2]) : null
+                    });
+                    importados++;
+                }
+                this.guardarDatos();
+                this.renderizarEstudiantes();
+                this.actualizarEstadisticas();
+                this.mostrarToast(`${importados} estudiantes importados`, 'success');
+            } catch (err) {
+                this.mostrarToast('Error al importar CSV', 'error');
+            }
+            e.target.value = '';
+        };
+        reader.readAsText(file);
+    }
+
+    exportarCSV() {
+        if (this.estudiantes.length === 0) { this.mostrarToast('No hay estudiantes', 'warning'); return; }
+        const filas = this.estudiantes.map(est => {
+            const def = this.calcularDefinitiva(est);
+            return [est.nombre, est.codigo, est.corte1 || '', est.corte2 || '', est.corte3 || '', def.definitiva !== null ? def.definitiva.toFixed(2) : ''].join(',');
+        });
+        const csv = ['nombre,codigo,corte1,corte2,corte3,definitiva', ...filas].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `calificaciones_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        this.mostrarToast('CSV exportado', 'success');
+    }
+
+    limpiarTodo() {
+        if (this.estudiantes.length === 0) return;
+        if (confirm('¿Eliminar TODOS los estudiantes?')) {
+            this.estudiantes = [];
+            this.guardarDatos();
+            this.renderizarEstudiantes();
+            this.actualizarEstadisticas();
+            this.mostrarToast('Datos eliminados', 'info');
+        }
+    }
+
+    mostrarToast(mensaje, tipo = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        const iconos = { success: '✓', error: '✗', warning: '⚠', info: 'ℹ' };
+        toast.className = `toast ${tipo}`;
+        toast.innerHTML = `<span style="margin-right:8px">${iconos[tipo]}</span>${mensaje}`;
+        container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(100%)'; setTimeout(() => toast.remove(), 300); }, 4000);
+    }
+
+    escapeHtml(texto) {
+        const div = document.createElement('div');
+        div.textContent = texto;
+        return div.innerHTML;
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => new CalculadoraCalificaciones());
+    </script>
+</body>
+</html>
